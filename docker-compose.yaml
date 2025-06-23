@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "${FRONTEND_HTTPS_PORT}:${FRONTEND_HTTPS_PORT}"
+      - "${BACKEND_HTTPS_PORT}:${BACKEND_HTTPS_PORT}"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs/cert.pem:/etc/ssl/cert.pem:ro
+      - ./certs/key.pem:/etc/ssl/key.pem:ro
+    environment:
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - BACKEND_PORT=${BACKEND_PORT}
+      - FRONTEND_HTTPS_PORT=${FRONTEND_HTTPS_PORT}
+      - BACKEND_HTTPS_PORT=${BACKEND_HTTPS_PORT}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
